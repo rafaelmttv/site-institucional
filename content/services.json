@@ -1,0 +1,37 @@
+{
+  "_label": "Serviços",
+  "hero": {
+    "title": "Nossos Serviços",
+    "subtitle": "Soluções completas para atender suas necessidades."
+  },
+  "sections": [
+    {
+      "title": "O que oferecemos",
+      "layout": "cards-3",
+      "items": [
+        {"title": "Consultoria", "description": "Análise completa e estratégias personalizadas para seu negócio.", "image": "assets/img/servico1.jpg"},
+        {"title": "Implementação", "description": "Execução profissional com acompanhamento dedicado.", "image": "assets/img/servico2.jpg"},
+        {"title": "Suporte", "description": "Atendimento contínuo e resolução rápida de problemas.", "image": "assets/img/servico3.jpg"},
+        {"title": "Treinamento", "description": "Capacitação da sua equipe para máxima autonomia.", "image": "assets/img/servico4.jpg"},
+        {"title": "Manutenção", "description": "Segurança e tranquilidade com monitoramento permanente.", "image": "assets/img/servico5.jpg"},
+        {"title": "Otimização", "description": "Melhoria contínua de processos e resultados.", "image": "assets/img/servico6.jpg"}
+      ]
+    },
+    {
+      "title": "Como trabalhamos",
+      "layout": "list",
+      "items": [
+        {"title": "1. Diagnóstico", "description": "Entendemos suas necessidades e objetivos."},
+        {"title": "2. Planejamento", "description": "Criamos um plano de ação sob medida."},
+        {"title": "3. Execução", "description": "Implementamos com qualidade e dentro do prazo."},
+        {"title": "4. Acompanhamento", "description": "Monitoramos resultados e ajustamos quando necessário."}
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Interessado?",
+    "text": "Solicite um orçamento sem compromisso.",
+    "button_text": "Solicitar orçamento",
+    "button_url": "/contato"
+  }
+}

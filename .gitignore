@@ -1,0 +1,26 @@
+# Dependências de build
+dev/node_modules/
+
+# Binários do Tailwind standalone (40MB+ cada)
+dev/tailwind-standalone*
+dev/tailwind-standalone-linux
+
+# Uploads
+assets/uploads/*
+!assets/uploads/.gitkeep
+
+# Settings do admin (pode conter credenciais / dados do cliente)
+content/settings.json
+
+# Arquivos do sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Config sensíveis
+*.env
+
+# Binários
+*.exe
+*.dll

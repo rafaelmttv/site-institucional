@@ -1,0 +1,43 @@
+{
+  "_label": "Início (Home)",
+  "hero": {
+    "title": "Soluções que transformam seu negócio",
+    "subtitle": "Oferecemos serviços de qualidade com atendimento diferenciado para ajudar sua empresa a crescer.",
+    "cta_text": "Fale conosco",
+    "cta_url": "/contato",
+    "secondary_cta_text": "Nossos serviços",
+    "secondary_cta_url": "/servicos",
+    "image": "assets/img/hero-bg.jpg"
+  },
+  "features": [
+    {"icon": "shield", "title": "Qualidade", "description": "Padrão de excelência em todos os serviços prestados."},
+    {"icon": "clock", "title": "Agilidade", "description": "Prazos curtos e cumpridos sem perder a qualidade."},
+    {"icon": "users", "title": "Suporte", "description": "Atendimento dedicado antes, durante e depois do serviço."}
+  ],
+  "sections": [
+    {
+      "title": "Nossos Serviços",
+      "layout": "cards-3",
+      "items": [
+        {"title": "Serviço 1", "description": "Descrição do primeiro serviço oferecido pela empresa.", "image": "assets/img/servico1.jpg"},
+        {"title": "Serviço 2", "description": "Descrição do segundo serviço oferecido pela empresa.", "image": "assets/img/servico2.jpg"},
+        {"title": "Serviço 3", "description": "Descrição do terceiro serviço oferecido pela empresa.", "image": "assets/img/servico3.jpg"}
+      ]
+    },
+    {
+      "title": "Diferenciais",
+      "layout": "list",
+      "items": [
+        {"title": "Experiência", "description": "Mais de 10 anos de mercado."},
+        {"title": " Equipe especializada", "description": "Profissionais qualificados e certificados."},
+        {"title": "Atendimento personalizado", "description": "Soluções sob medida para cada cliente."}
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Pronto para começar?",
+    "text": "Entre em contato e descubra como podemos ajudar o seu negócio.",
+    "button_text": "Fale conosco",
+    "button_url": "/contato"
+  }
+}

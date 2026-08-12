@@ -1,0 +1,38 @@
+{
+  "_label": "Sobre Nós",
+  "hero": {
+    "title": "Sobre Nós",
+    "subtitle": "Conheça nossa história, valores e missão."
+  },
+  "sections": [
+    {
+      "title": "Nossa História",
+      "layout": "text",
+      "content": "Fundada em 2010, nossa empresa nasceu da paixão por oferecer soluções de qualidade. Ao longo dos anos, ampliamos nossa atuação e hoje atendemos clientes em toda a região."
+    },
+    {
+      "title": "Nossos Valores",
+      "layout": "list",
+      "items": [
+        {"title": "Integridade", "description": "Agimos com ética e transparência em todas as relações."},
+        {"title": "Excelência", "description": "Buscamos a qualidade máxima em tudo o que fazemos."},
+        {"title": "Inovação", "description": "Estamos sempre à frente, buscando novas soluções."},
+        {"title": "Compromisso", "description": "Honramos nossos compromissos com clientes e parceiros."}
+      ]
+    },
+    {
+      "title": "Nossa Missão",
+      "layout": "text",
+      "content": "Oferecer soluções inovadoras e de alta qualidade que gerem valor real para nossos clientes, contribuindo para o crescimento sustentável de seus negócios."
+    },
+    {
+      "title": "Nossa Equipe",
+      "layout": "cards-3",
+      "items": [
+        {"title": "João Silva", "description": "CEO & Fundador", "image": "assets/img/equipe1.jpg"},
+        {"title": "Maria Santos", "description": "Diretora de Operações", "image": "assets/img/equipe2.jpg"},
+        {"title": "Pedro Costa", "description": "Diretor de Tecnologia", "image": "assets/img/equipe3.jpg"}
+      ]
+    }
+  ]
+}

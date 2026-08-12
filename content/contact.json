@@ -1,0 +1,21 @@
+{
+  "_label": "Contato",
+  "hero": {
+    "title": "Fale Conosco",
+    "subtitle": "Estamos prontos para atender você. Entre em contato!"
+  },
+  "info": {
+    "title": "Nossos Canais",
+    "items": [
+      {"icon": "phone", "label": "Telefone", "value": "+55 11 9999-9999"},
+      {"icon": "email", "label": "E-mail", "value": "contato@empresa.com.br"},
+      {"icon": "location", "label": "Endereço", "value": "Rua Exemplo, 123 — São Paulo/SP"},
+      {"icon": "clock", "label": "Horário", "value": "Seg-Sex: 8h às 18h"}
+    ]
+  },
+  "faq": [
+    {"question": "Como posso solicitar um orçamento?", "answer": "Você pode solicitar um orçamento através do formulário aqui na página de contato, por WhatsApp ou ligando diretamente."},
+    {"question": "Quanto tempo leva para receber uma resposta?", "answer": "Respondemos em até 24 horas úteis após o recebimento da sua solicitação."},
+    {"question": "Vocês atendem fora da cidade?", "answer": "Sim, atendemos clientes em toda a região. Entre em contato para verificar disponibilidade."}
+  ]
+}
