@@ -18,6 +18,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Rate limiting data (contém IPs)
+content/.login_attempts.json
+
 # Config sensíveis
 *.env
 
