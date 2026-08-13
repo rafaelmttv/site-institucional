@@ -8,14 +8,20 @@ require_once __DIR__ . '/../lib/json_store.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    if (!session_csrf_check()) {
+        $error = 'Token CSRF inválido. Recarregue a página.';
+    } else {
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-    if (admin_login($username, $password)) {
-        header('Location: /admin/dashboard.php');
-        exit;
+        if (admin_login($username, $password)) {
+            session_regenerate_id(true);
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            header('Location: /admin/dashboard.php');
+            exit;
+        }
+        $error = 'Usuário ou senha incorretos.';
     }
-    $error = 'Usuário ou senha incorretos.';
 }
 ?>
 <!DOCTYPE html>
@@ -43,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
-      <div>
+           <?= admin_csrf_input() ?>
+           <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Usuário</label>
         <input type="text" name="username" required autofocus
                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
