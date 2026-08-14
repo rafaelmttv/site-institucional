@@ -3,26 +3,22 @@ declare(strict_types=1);
 
 /**
  * Rate limiting para login admin.
- * Persiste tentativas por IP em arquivo JSON com file locking.
- * Limita a 5 tentativas por minuto; após exceder, bloqueia por 5 minutos.
+ * Persiste tentativas por arquivo JSON com file locking.
+ * Limita 5 tentativas por minuto; após exceder, bloqueia por 5 minutos.
  */
-
-const RATE_LIMIT_MAX_ATTEMPTS   = 5;
+const RATE_LIMIT_MAX_ATTEMPTS = 5;
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 const RATE_LIMIT_LOCKOUT_SECONDS = 300;
 
-function rate_limit_file(): string
-{
+function rate_limit_file(): string {
     return dirname(__DIR__) . '/content/.login_attempts.json';
 }
 
-function rate_limit_get_client_ip(): string
-{
+function rate_limit_get_client_ip(): string {
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
 
-function rate_limit_read(): array
-{
+function rate_limit_read(): array {
     $path = rate_limit_file();
     if (!file_exists($path)) return [];
     $fp = fopen($path, 'r');
@@ -35,8 +31,7 @@ function rate_limit_read(): array
     return is_array($data) ? $data : [];
 }
 
-function rate_limit_write(array $data): void
-{
+function rate_limit_write(array $data): void {
     $path = rate_limit_file();
     $fp = fopen($path, 'c+');
     if (!$fp) return;
@@ -49,103 +44,50 @@ function rate_limit_write(array $data): void
     fclose($fp);
 }
 
-/**
- * Verifica se o IP pode tentar login.
- * Retorna ['blocked' => bool, 'remaining' => int, 'retry_after' => int]
- */
-function rate_limit_check(): array
-{
+function rate_limit_check(): array {
     $ip = rate_limit_get_client_ip();
     $data = rate_limit_read();
     $now = time();
 
-    $entry = $data[$ip] ?? null;
-
-    if ($entry && ($entry['locked_until'] ?? 0) > $now) {
+    // Check if locked until a future time
+    if (isset($data[$ip]['locked_until']) && $data[$ip]['locked_until'] > $now) {
         return [
-            'blocked'     => true,
-            'remaining'   => 0,
-            'retry_after' => $entry['locked_until'] - $now,
+            'blocked' => true,
+            'remaining' => 0,
+            'retry_after' => $data[$ip]['locked_until'] - $now
         ];
     }
 
+    // Count attempts for this IP in the current window
     $count = 0;
-    if ($entry) {
-        $count = count(array_filter(
-            $entry['attempts'] ?? [],
-            fn($t) => $t > $now - RATE_LIMIT_WINDOW_SECONDS
-        ));
+    if (isset($data[$ip])) {
+        $count = count($data[$ip]['attempts']);
     }
 
-    return [
-        'blocked'     => false,
-        'remaining'   => max(0, RATE_LIMIT_MAX_ATTEMPTS - $count),
-        'retry_after' => 0,
-    ];
-}
-
-/**
- * Registra uma tentativa falha de login.
- */
-function rate_limit_record_failure(): void
-{
-    $ip = rate_limit_get_client_ip();
-    $data = rate_limit_read();
-    $now = time();
-
-    if (!isset($data[$ip])) {
-        $data[$ip] = ['attempts' => [], 'locked_until' => 0];
+    // Check if we've exceeded the max attempts
+    if ($count >= RATE_LIMIT_MAX_ATTEMPTS) {
+        return [
+            'blocked' => true,
+            'remaining' => 0,
+            'retry_after' => RATE_LIMIT_LOCKOUT_SECONDS
+        ];
     }
 
-    // Remove tentativas fora da janela de tempo
-    $data[$ip]['attempts'] = array_values(array_filter(
-        $data[$ip]['attempts'] ?? [],
-        fn($t) => $t > $now - RATE_LIMIT_WINDOW_SECONDS
-    ));
+    // Calculate remaining attempts and retry time
+    $remaining = RATE_LIMIT_MAX_ATTEMPTS - $count;
+    $retry_after = 0;
 
-    $data[$ip]['attempts'][] = $now;
-
-    // Bloqueia se excedeu o limite
-    if (count($data[$ip]['attempts']) >= RATE_LIMIT_MAX_ATTEMPTS) {
-        $data[$ip]['locked_until'] = $now + RATE_LIMIT_LOCKOUT_SECONDS;
-    }
-
-    rate_limit_write($data);
-}
-
-/**
- * Limpa tentativas após login bem-sucedido.
- */
-function rate_limit_clear(): void
-{
-    $ip = rate_limit_get_client_ip();
-    $data = rate_limit_read();
-    unset($data[$ip]);
-    rate_limit_write($data);
-}
-
-/**
- * Remove IPs expirados (housekeeping).
- */
-function rate_limit_cleanup(): void
-{
-    $data = rate_limit_read();
-    $now = time();
-    $changed = false;
-
-    foreach ($data as $ip => $entry) {
-        $expired = ($entry['locked_until'] ?? 0) < $now
-            && empty(array_filter(
-                $entry['attempts'] ?? [],
-                fn($t) => $t > $now - RATE_LIMIT_WINDOW_SECONDS
-            ));
-        if ($expired) {
-            unset($data[$ip]);
-            $changed = true;
+    if ($count > 0) {
+        $last_attempt = end($data[$ip]['attempts']);
+        $elapsed = $now - $last_attempt;
+        if ($last_attempt > 0 && $elapsed < RATE_LIMIT_WINDOW_SECONDS) {
+            $retry_after = RATE_LIMIT_WINDOW_SECONDS - $elapsed;
         }
     }
 
-    if ($changed) {
-        rate_limit_write($data);
-    }
+    return [
+        'blocked' => false,
+        'remaining' => $remaining,
+        'retry_after' => $retry_after
+    ];
 }
