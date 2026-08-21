@@ -4,23 +4,39 @@ declare(strict_types=1);
 require_once __DIR__ . '/../lib/helpers.php';
 require_once __DIR__ . '/../lib/admin.php';
 require_once __DIR__ . '/../lib/json_store.php';
+require_once __DIR__ . '/../lib/rate_limit.php';
+
+rate_limit_cleanup();
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!session_csrf_check()) {
+    $rl = rate_limit_check();
+
+    if ($rl['blocked']) {
+        $mins = ceil($rl['retry_after'] / 60);
+        $error = "Muitas tentativas. Tente novamente em {$mins} minuto(s).";
+    } elseif (!session_csrf_check()) {
         $error = 'Token CSRF inválido. Recarregue a página.';
     } else {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
         if (admin_login($username, $password)) {
+            rate_limit_clear();
             session_regenerate_id(true);
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             header('Location: /admin/dashboard.php');
             exit;
         }
+        rate_limit_record_failure();
+        $remaining = rate_limit_check()['remaining'];
         $error = 'Usuário ou senha incorretos.';
+        if ($remaining > 0) {
+            $error .= " {$remaining} tentativa(s) restante(s).";
+        } else {
+            $error = 'Muitas tentativas. Conta bloqueada por 5 minutos.';
+        }
     }
 }
 ?>
